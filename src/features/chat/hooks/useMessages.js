@@ -126,6 +126,42 @@ export function useMessages({
     };
   }, [autoPoll, conversationId, fetchMessages, pollInterval]);
 
+  // Real-time WebSocket connection (supplements polling for instant zero-latency delivery)
+  useEffect(() => {
+    if (!conversationId || typeof WebSocket === 'undefined') return;
+
+    let ws = null;
+    try {
+      const base = chatApi.getBaseUrl();
+      const wsUrl = base.replace(/^http/, 'ws') + `/ws?conversation_id=${encodeURIComponent(conversationId)}`;
+      ws = new WebSocket(wsUrl);
+
+      ws.onmessage = (event) => {
+        try {
+          const parsed = JSON.parse(event.data);
+          if (parsed.type === 'NEW_MESSAGE' && parsed.data && isMountedRef.current) {
+            const incoming = parsed.data;
+            if (String(incoming.conversation_id) === String(conversationId)) {
+              setMessages((prev) => {
+                const exists = prev.some((m) => String(m.id) === String(incoming.id));
+                if (exists) return prev;
+                return [...prev, incoming];
+              });
+            }
+          }
+        } catch {}
+      };
+    } catch {}
+
+    return () => {
+      if (ws) {
+        try {
+          ws.close();
+        } catch {}
+      }
+    };
+  }, [conversationId]);
+
   const refreshMessages = useCallback(() => {
     setRefreshing(true);
     return fetchMessages(false);

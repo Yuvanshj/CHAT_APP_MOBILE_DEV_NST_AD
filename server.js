@@ -11,6 +11,14 @@
 
 const http = require('http');
 
+let wss = null;
+try {
+  const WebSocket = require('ws');
+  // ws Server will be attached to http server
+} catch {
+  // ws optional
+}
+
 const PORT = process.env.PORT || 3000;
 
 // Seed Data
@@ -187,6 +195,9 @@ const server = http.createServer((req, res) => {
       };
       messages.push(newMsg);
 
+      // Broadcast to WebSocket clients if connected
+      broadcastWsMessage(newMsg);
+
       // Update conversation lastMessage
       const convo = conversations.find((c) => String(c.id) === String(json.conversation_id));
       if (convo) {
@@ -206,11 +217,46 @@ const server = http.createServer((req, res) => {
   });
 });
 
+// WebSocket Server Support
+try {
+  const WebSocket = require('ws');
+  wss = new WebSocket.Server({ server });
+  wss.on('connection', (socket, req) => {
+    try {
+      const parsedUrl = new URL(req.url, 'http://localhost');
+      socket.conversationId = parsedUrl.searchParams.get('conversation_id');
+    } catch {}
+
+    socket.on('message', (data) => {
+      try {
+        const payload = JSON.parse(data.toString());
+        if (payload.action === 'join' && payload.conversation_id) {
+          socket.conversationId = payload.conversation_id;
+        }
+      } catch {}
+    });
+  });
+} catch (e) {
+  wss = null;
+}
+
+function broadcastWsMessage(newMsg) {
+  if (!wss) return;
+  const payload = JSON.stringify({ type: 'NEW_MESSAGE', data: newMsg });
+  wss.clients.forEach((client) => {
+    if (client.readyState === 1) { // OPEN
+      if (!client.conversationId || String(client.conversationId) === String(newMsg.conversation_id)) {
+        client.send(payload);
+      }
+    }
+  });
+}
+
 server.listen(PORT, '0.0.0.0', () => {
   console.log(`\n========================================`);
-  console.log(`🚀 Chat API Server running on port ${PORT}`);
+  console.log(`🚀 Chat API & WebSocket Server running on port ${PORT}`);
   console.log(`========================================`);
-  console.log(`• Localhost (Web / iOS Simulator): http://localhost:${PORT}`);
-  console.log(`• Android Emulator:                http://10.0.2.2:${PORT}`);
-  console.log(`• Physical Device LAN:             http://<YOUR_LOCAL_IP>:${PORT}\n`);
+  console.log(`• Localhost (Web / iOS Simulator): http://localhost:${PORT} / ws://localhost:${PORT}`);
+  console.log(`• Android Emulator:                http://10.0.2.2:${PORT} / ws://10.0.2.2:${PORT}`);
+  console.log(`• Physical Device LAN:             http://<YOUR_LOCAL_IP>:${PORT} / ws://<YOUR_LOCAL_IP>:${PORT}\n`);
 });
