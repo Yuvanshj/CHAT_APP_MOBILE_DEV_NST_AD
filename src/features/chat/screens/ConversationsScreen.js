@@ -44,10 +44,10 @@ export const ConversationsScreen = () => {
 
   return (
     <SafeAreaView style={styles.safeArea}>
-      {/* WhatsApp Brand Header */}
+      {/* App Header */}
       <View style={styles.whatsappHeader}>
         <View style={styles.titleRow}>
-          <Text style={styles.title}>WhatsApp</Text>
+          <Text style={styles.title}>chatApp</Text>
           <View style={styles.headerActions}>
             <TouchableOpacity
               style={styles.headerIconBtn}
