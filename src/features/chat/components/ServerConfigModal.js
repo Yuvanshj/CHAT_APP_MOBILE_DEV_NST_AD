@@ -89,6 +89,12 @@ export const ServerConfigModal = ({
             </TouchableOpacity>
             <TouchableOpacity
               style={styles.presetChip}
+              onPress={() => setPreset('http://10.7.27.242:3000')}
+            >
+              <Text style={styles.presetText}>Mac Wi-Fi (10.7.27.242)</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.presetChip}
               onPress={() => setPreset('http://10.7.1.89:3000')}
             >
               <Text style={styles.presetText}>Lab LAN (10.7.1.89)</Text>
