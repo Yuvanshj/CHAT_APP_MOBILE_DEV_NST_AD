@@ -31,7 +31,7 @@ export const MessageBubble = ({
           isOwn ? styles.rowOwn : styles.rowOther,
         ]}
       >
-        {!isOwn && (
+        {!isOwn && showSenderName && (
           <View style={styles.avatarContainer}>
             <ParticipantAvatar
               name={message.sender_name || `User ${message.sender_id || ''}`}

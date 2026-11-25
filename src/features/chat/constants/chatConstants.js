@@ -27,11 +27,52 @@ function resolveDefaultApiUrl() {
   return 'http://localhost:3000';
 }
 
+function resolveDefaultIdentity() {
+  try {
+    let isPhysical = false;
+
+    // Method 1: expo-device
+    try {
+      const Device = require('expo-device');
+      if (Device && Device.isDevice !== undefined) {
+        isPhysical = Boolean(Device.isDevice);
+      }
+    } catch {}
+
+    // Method 2: Platform check in React Native
+    if (!isPhysical) {
+      try {
+        const { Platform } = require('react-native');
+        if (Platform && Platform.OS === 'ios' && Platform.constants) {
+          const model = (Platform.constants.model || '').toLowerCase();
+          if (model && !model.includes('simulator') && !model.includes('x86') && !model.includes('arm64')) {
+            isPhysical = true;
+          }
+        }
+      } catch {}
+    }
+
+    if (isPhysical) {
+      return { id: 'second', name: 'Student 1', auth: 'Basic second:second' };
+    }
+  } catch {}
+
+  return { id: 'first', name: 'Vaibhav', auth: 'Basic first:second' };
+}
+
+const defaultIdentity = resolveDefaultIdentity();
+
+export const PRESET_PROFILES = [
+  { id: 'first', name: 'Vaibhav', label: '👨‍🏫 Vaibhav (Mac)', auth: 'Basic first:second' },
+  { id: 'second', name: 'Student 1', label: '📱 Student 1 (iPhone)', auth: 'Basic second:second' },
+  { id: 'third', name: 'Student 2', label: '💻 Student 2', auth: 'Basic third:third' },
+];
+
 export const CHAT_CONSTANTS = {
   DEFAULT_API_BASE_URL: resolveDefaultApiUrl(),
-  DEFAULT_AUTH_HEADER: (typeof process !== 'undefined' && process.env && process.env.EXPO_PUBLIC_API_AUTH_TOKEN) || 'Basic first:second',
-  DEFAULT_USER_ID: 'first',
-  DEFAULT_USER_NAME: 'Current User',
+  DEFAULT_AUTH_HEADER: (typeof process !== 'undefined' && process.env && process.env.EXPO_PUBLIC_API_AUTH_TOKEN) || defaultIdentity.auth,
+  DEFAULT_USER_ID: defaultIdentity.id,
+  DEFAULT_USER_NAME: defaultIdentity.name,
 
   // Polling intervals in milliseconds
   MESSAGE_POLL_INTERVAL: 4000,

@@ -9,18 +9,20 @@ import {
   ActivityIndicator,
   RefreshControl,
   SafeAreaView,
+  ScrollView,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { useConversations } from '../hooks/useConversations.js';
 import { ConversationCard } from '../components/ConversationCard.js';
 import { ServerConfigModal } from '../components/ServerConfigModal.js';
 import { useAuth } from '../context/AuthContext.js';
+import { PRESET_PROFILES } from '../constants/chatConstants.js';
 import { COLORS, SPACING, RADIUS, FONT_SIZES } from '../constants/theme.js';
 
 export const ConversationsScreen = () => {
   const navigation = useNavigation();
   const { conversations, loading, refreshing, error, refresh } = useConversations();
-  const { isServerOnline } = useAuth();
+  const { isServerOnline, currentUserId, updateConfig } = useAuth();
 
   const [searchQuery, setSearchQuery] = useState('');
   const [settingsVisible, setSettingsVisible] = useState(false);
@@ -96,6 +98,46 @@ export const ConversationsScreen = () => {
               <Text style={styles.clearSearch}>✕</Text>
             </TouchableOpacity>
           )}
+        </View>
+
+        {/* Quick Identity Switcher */}
+        <View style={styles.identityBar}>
+          <Text style={styles.identityLabel}>Chatting as:</Text>
+          <ScrollView
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            contentContainerStyle={styles.identityScroll}
+          >
+            {PRESET_PROFILES.map((p) => {
+              const isActive = String(currentUserId) === String(p.id);
+              return (
+                <TouchableOpacity
+                  key={p.id}
+                  style={[
+                    styles.identityChip,
+                    isActive && styles.identityChipActive,
+                  ]}
+                  onPress={() =>
+                    updateConfig({
+                      userId: p.id,
+                      userName: p.name,
+                      authHeader: p.auth,
+                    })
+                  }
+                  activeOpacity={0.7}
+                >
+                  <Text
+                    style={[
+                      styles.identityChipText,
+                      isActive && styles.identityChipTextActive,
+                    ]}
+                  >
+                    {p.label}
+                  </Text>
+                </TouchableOpacity>
+              );
+            })}
+          </ScrollView>
         </View>
       </View>
 
@@ -279,6 +321,44 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: COLORS.textMuted,
     paddingHorizontal: 4,
+  },
+  identityBar: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: SPACING.sm,
+    paddingTop: 2,
+  },
+  identityLabel: {
+    fontSize: 11,
+    fontWeight: '700',
+    color: COLORS.textMuted,
+    marginRight: 6,
+  },
+  identityScroll: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+  },
+  identityChip: {
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+    borderRadius: RADIUS.full,
+    backgroundColor: COLORS.surfaceAlt,
+    borderWidth: 1,
+    borderColor: 'transparent',
+  },
+  identityChipActive: {
+    backgroundColor: '#E8F5E9',
+    borderColor: '#00A884',
+  },
+  identityChipText: {
+    fontSize: 11,
+    color: COLORS.textSecondary,
+    fontWeight: '600',
+  },
+  identityChipTextActive: {
+    color: '#008069',
+    fontWeight: '700',
   },
   errorBanner: {
     backgroundColor: COLORS.dangerLight,

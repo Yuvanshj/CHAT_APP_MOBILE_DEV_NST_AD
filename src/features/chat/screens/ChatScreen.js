@@ -27,7 +27,7 @@ import { COLORS, SPACING, RADIUS, FONT_SIZES } from '../constants/theme.js';
 export const ChatScreen = () => {
   const route = useRoute();
   const navigation = useNavigation();
-  const { currentUserId } = useAuth();
+  const { currentUserId, currentUserName } = useAuth();
 
   const conversationData = route.params?.data || {
     conversationId: '',
@@ -56,6 +56,16 @@ export const ChatScreen = () => {
   const [attachmentMenuVisible, setAttachmentMenuVisible] = useState(false);
   const [infoModalVisible, setInfoModalVisible] = useState(false);
 
+  const peerParticipantId =
+    conversationData.type === 'DM' && conversationData.participants
+      ? conversationData.participants.find((p) => String(p) !== String(currentUserId))
+      : null;
+  const peerProfile = peerParticipantId ? participantsMap[String(peerParticipantId)] : null;
+  const chatDisplayName =
+    conversationData.type === 'DM' && peerProfile?.name
+      ? peerProfile.name
+      : conversationData.name || 'Chat';
+
   useLayoutEffect(() => {
     navigation.setOptions({
       headerTitle: () => (
@@ -65,12 +75,12 @@ export const ChatScreen = () => {
           activeOpacity={0.7}
         >
           <Text style={styles.headerTitleText} numberOfLines={1}>
-            {conversationData.name || 'Chat'}
+            {chatDisplayName}
           </Text>
           <Text style={styles.headerSubtitleText} numberOfLines={1}>
             {conversationData.type === 'GROUP'
               ? `${conversationData.participants?.length || 0} participants`
-              : 'online'}
+              : `online • You: ${currentUserName || currentUserId}`}
           </Text>
         </TouchableOpacity>
       ),
@@ -84,7 +94,7 @@ export const ChatScreen = () => {
         </TouchableOpacity>
       ),
     });
-  }, [navigation, conversationData]);
+  }, [navigation, conversationData, chatDisplayName, currentUserName, currentUserId]);
 
   useEffect(() => {
     if (messages.length > 0) {

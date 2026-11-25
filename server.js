@@ -191,9 +191,15 @@ const server = http.createServer((req, res) => {
         const auth = req.headers['authorization'];
         if (auth && auth.startsWith('Basic ')) {
           try {
-            const decoded = Buffer.from(auth.slice(6), 'base64').toString('utf-8');
-            const [u] = decoded.split(':');
-            if (u) senderId = u;
+            const raw = auth.slice(6).trim();
+            if (raw.includes(':')) {
+              senderId = raw.split(':')[0];
+            } else {
+              const decoded = Buffer.from(raw, 'base64').toString('utf-8');
+              if (decoded.includes(':')) {
+                senderId = decoded.split(':')[0];
+              }
+            }
           } catch {}
         }
       }

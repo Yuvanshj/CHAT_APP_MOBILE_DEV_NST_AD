@@ -11,6 +11,7 @@ import {
   SafeAreaView,
 } from 'react-native';
 import { useAuth } from '../context/AuthContext.js';
+import { PRESET_PROFILES } from '../constants/chatConstants.js';
 import { COLORS, SPACING, RADIUS, FONT_SIZES } from '../constants/theme.js';
 
 export const ServerConfigModal = ({
@@ -129,6 +130,37 @@ export const ServerConfigModal = ({
             autoCorrect={false}
           />
 
+          {/* Quick Profile Presets */}
+          <Text style={styles.label}>Switch Active User Profile (1-Tap):</Text>
+          <View style={styles.presetsRow}>
+            {PRESET_PROFILES.map((p) => {
+              const isSelected = userId === p.id;
+              return (
+                <TouchableOpacity
+                  key={p.id}
+                  style={[
+                    styles.presetChip,
+                    isSelected && styles.presetChipActive,
+                  ]}
+                  onPress={() => {
+                    setUserId(p.id);
+                    setUserName(p.name);
+                    setAuth(p.auth);
+                  }}
+                >
+                  <Text
+                    style={[
+                      styles.presetText,
+                      isSelected && styles.presetTextActive,
+                    ]}
+                  >
+                    {p.label}
+                  </Text>
+                </TouchableOpacity>
+              );
+            })}
+          </View>
+
           {/* Current User ID */}
           <Text style={styles.label}>Current User ID (Your Identity):</Text>
           <TextInput
@@ -246,11 +278,21 @@ const styles = StyleSheet.create({
     paddingVertical: 6,
     borderRadius: RADIUS.full,
     backgroundColor: COLORS.primaryLight,
+    borderWidth: 1,
+    borderColor: 'transparent',
+  },
+  presetChipActive: {
+    backgroundColor: '#00A884',
+    borderColor: '#008069',
   },
   presetText: {
     fontSize: FONT_SIZES.xs,
     color: COLORS.primary,
     fontWeight: '600',
+  },
+  presetTextActive: {
+    color: '#FFFFFF',
+    fontWeight: '700',
   },
   input: {
     backgroundColor: COLORS.surface,
