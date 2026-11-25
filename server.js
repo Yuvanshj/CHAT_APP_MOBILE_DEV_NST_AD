@@ -252,6 +252,16 @@ function broadcastWsMessage(newMsg) {
   });
 }
 
+server.on('error', (err) => {
+  if (err.code === 'EADDRINUSE') {
+    console.error(`\n❌ Error: Port ${PORT} is already in use by another process.`);
+    console.error(`👉 Run this command to free it and try again:\n   kill -9 $(lsof -t -i :${PORT})\n`);
+    process.exit(1);
+  } else {
+    console.error('Server error:', err);
+  }
+});
+
 server.listen(PORT, '0.0.0.0', () => {
   console.log(`\n========================================`);
   console.log(`🚀 Chat API & WebSocket Server running on port ${PORT}`);
