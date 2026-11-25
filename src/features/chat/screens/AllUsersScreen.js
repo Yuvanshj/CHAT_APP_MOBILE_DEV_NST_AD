@@ -75,8 +75,10 @@ export const AllUsersScreen = () => {
   return (
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.header}>
-        <Text style={styles.title}>All Users</Text>
-        <Text style={styles.subtitle}>Discover registered users and start a chat</Text>
+        <Text style={styles.title}>Select contact</Text>
+        <Text style={styles.subtitle}>
+          {filteredUsers.length} contact{filteredUsers.length === 1 ? '' : 's'}
+        </Text>
 
         {/* Type Selector (DM vs GROUP) */}
         <View style={styles.typeSelector}>
@@ -86,7 +88,7 @@ export const AllUsersScreen = () => {
             activeOpacity={0.8}
           >
             <Text style={[styles.typeText, !isGroup && styles.typeTextActive]}>
-              💬 Direct Message (DM)
+              💬 Direct Message
             </Text>
           </TouchableOpacity>
 
@@ -107,7 +109,7 @@ export const AllUsersScreen = () => {
             <TextInput
               style={styles.groupNameInput}
               placeholder="Enter group conversation name..."
-              placeholderTextColor={COLORS.textMuted}
+              placeholderTextColor="#8696A0"
               value={conversationName}
               onChangeText={setConversationName}
             />
@@ -119,8 +121,8 @@ export const AllUsersScreen = () => {
           <Text style={styles.searchIcon}>🔍</Text>
           <TextInput
             style={styles.searchInput}
-            placeholder="Search users by name or bio..."
-            placeholderTextColor={COLORS.textMuted}
+            placeholder="Search contacts..."
+            placeholderTextColor="#8696A0"
             value={searchQuery}
             onChangeText={setSearchQuery}
             clearButtonMode="while-editing"
@@ -248,79 +250,79 @@ export const AllUsersScreen = () => {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: COLORS.background,
+    backgroundColor: '#008069',
   },
   header: {
-    backgroundColor: COLORS.surface,
-    paddingHorizontal: SPACING.lg,
-    paddingTop: SPACING.md,
-    paddingBottom: SPACING.sm,
-    borderBottomWidth: 1,
-    borderBottomColor: COLORS.border,
+    backgroundColor: '#008069',
+    paddingHorizontal: 16,
+    paddingTop: 12,
+    paddingBottom: 14,
   },
   title: {
-    fontSize: FONT_SIZES.xxl,
-    fontWeight: '800',
-    color: COLORS.textPrimary,
+    fontSize: 20,
+    fontWeight: '700',
+    color: '#FFFFFF',
+    letterSpacing: 0.2,
   },
   subtitle: {
-    fontSize: FONT_SIZES.xs,
-    color: COLORS.textSecondary,
-    marginBottom: SPACING.md,
+    fontSize: 12,
+    color: '#DCF8C6',
+    marginTop: 2,
+    marginBottom: 8,
   },
   typeSelector: {
     flexDirection: 'row',
-    backgroundColor: COLORS.surfaceAlt,
-    borderRadius: RADIUS.md,
+    backgroundColor: 'rgba(255, 255, 255, 0.18)',
+    borderRadius: 20,
     padding: 3,
-    marginBottom: SPACING.sm,
+    marginBottom: 8,
   },
   typeButton: {
     flex: 1,
-    paddingVertical: SPACING.sm,
+    paddingVertical: 7,
     alignItems: 'center',
-    borderRadius: RADIUS.sm,
+    borderRadius: 18,
   },
   typeButtonActive: {
-    backgroundColor: COLORS.primary,
+    backgroundColor: '#FFFFFF',
   },
   typeText: {
-    fontSize: FONT_SIZES.sm,
+    fontSize: 13,
     fontWeight: '600',
-    color: COLORS.textSecondary,
-  },
-  typeTextActive: {
     color: '#FFFFFF',
   },
+  typeTextActive: {
+    color: '#008069',
+    fontWeight: '700',
+  },
   groupNameContainer: {
-    marginBottom: SPACING.sm,
+    marginBottom: 8,
   },
   groupNameInput: {
-    backgroundColor: COLORS.surfaceAlt,
-    borderWidth: 1,
-    borderColor: COLORS.primary,
-    borderRadius: RADIUS.md,
-    paddingHorizontal: SPACING.md,
-    paddingVertical: SPACING.sm,
-    fontSize: FONT_SIZES.sm,
-    color: COLORS.textPrimary,
+    backgroundColor: '#FFFFFF',
+    borderRadius: 20,
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+    fontSize: 14,
+    color: '#111B21',
   },
   searchBar: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: COLORS.surfaceAlt,
-    borderRadius: RADIUS.md,
-    paddingHorizontal: SPACING.md,
+    backgroundColor: '#FFFFFF',
+    borderRadius: 20,
+    paddingHorizontal: 12,
     height: 38,
   },
   searchIcon: {
     fontSize: 14,
-    marginRight: SPACING.xs,
+    marginRight: 6,
+    opacity: 0.6,
   },
   searchInput: {
     flex: 1,
-    fontSize: FONT_SIZES.sm,
-    color: COLORS.textPrimary,
+    fontSize: 14,
+    color: '#111B21',
   },
   selectedRow: {
     flexDirection: 'row',

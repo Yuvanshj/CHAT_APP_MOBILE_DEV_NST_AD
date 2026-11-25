@@ -57,13 +57,13 @@ function resolveDefaultIdentity() {
     }
   } catch {}
 
-  return { id: 'first', name: 'Vaibhav', auth: 'Basic first:second' };
+  return { id: 'first', name: 'Yuvansh', auth: 'Basic first:second' };
 }
 
 const defaultIdentity = resolveDefaultIdentity();
 
 export const PRESET_PROFILES = [
-  { id: 'first', name: 'Vaibhav', label: '👨‍🏫 Vaibhav (Mac)', auth: 'Basic first:second' },
+  { id: 'first', name: 'Yuvansh', label: '👨‍💻 Yuvansh (Mac)', auth: 'Basic first:second' },
   { id: 'second', name: 'Student 1', label: '📱 Student 1 (iPhone)', auth: 'Basic second:second' },
 ];
 

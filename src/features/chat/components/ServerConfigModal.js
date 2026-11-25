@@ -178,7 +178,7 @@ export const ServerConfigModal = ({
             style={styles.input}
             value={userName}
             onChangeText={setUserName}
-            placeholder="e.g. Vaibhav"
+            placeholder="e.g. Yuvansh"
           />
 
           {/* Connection Test */}

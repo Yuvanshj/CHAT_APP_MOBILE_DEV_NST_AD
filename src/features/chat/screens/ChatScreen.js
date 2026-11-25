@@ -74,24 +74,48 @@ export const ChatScreen = () => {
           onPress={() => setInfoModalVisible(true)}
           activeOpacity={0.7}
         >
-          <Text style={styles.headerTitleText} numberOfLines={1}>
-            {chatDisplayName}
-          </Text>
-          <Text style={styles.headerSubtitleText} numberOfLines={1}>
-            {conversationData.type === 'GROUP'
-              ? `${conversationData.participants?.length || 0} participants`
-              : `online • You: ${currentUserName || currentUserId}`}
-          </Text>
+          <View style={styles.headerTitleRow}>
+            <ParticipantAvatar
+              name={chatDisplayName}
+              size={32}
+            />
+            <View style={styles.headerTextCol}>
+              <Text style={styles.headerTitleText} numberOfLines={1}>
+                {chatDisplayName}
+              </Text>
+              <Text style={styles.headerSubtitleText} numberOfLines={1}>
+                {conversationData.type === 'GROUP'
+                  ? `${conversationData.participants?.length || 0} participants`
+                  : `online • You: ${currentUserName || currentUserId}`}
+              </Text>
+            </View>
+          </View>
         </TouchableOpacity>
       ),
       headerRight: () => (
-        <TouchableOpacity
-          onPress={() => setInfoModalVisible(true)}
-          style={styles.headerInfoBtn}
-          hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
-        >
-          <Text style={styles.headerInfoIcon}>ℹ️</Text>
-        </TouchableOpacity>
+        <View style={styles.headerRightRow}>
+          <TouchableOpacity
+            onPress={() => Alert.alert('Video Call', `Starting video call with ${chatDisplayName}...`)}
+            style={styles.headerActionBtn}
+            hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
+          >
+            <Text style={styles.headerActionIcon}>📹</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => Alert.alert('Voice Call', `Calling ${chatDisplayName}...`)}
+            style={styles.headerActionBtn}
+            hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
+          >
+            <Text style={styles.headerActionIcon}>📞</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => setInfoModalVisible(true)}
+            style={styles.headerActionBtn}
+            hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
+          >
+            <Text style={styles.headerActionIcon}>ℹ️</Text>
+          </TouchableOpacity>
+        </View>
       ),
     });
   }, [navigation, conversationData, chatDisplayName, currentUserName, currentUserId]);
@@ -214,6 +238,13 @@ export const ChatScreen = () => {
             ref={flatListRef}
             data={messages}
             keyExtractor={(item, index) => String(item.id || index)}
+            ListHeaderComponent={
+              <View style={styles.dateSeparatorContainer}>
+                <View style={styles.dateSeparatorPill}>
+                  <Text style={styles.dateSeparatorText}>TODAY</Text>
+                </View>
+              </View>
+            }
             renderItem={({ item }) => {
               const isOwn =
                 String(item.sender_id || '') === String(currentUserId) ||
@@ -344,32 +375,66 @@ export const ChatScreen = () => {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: COLORS.background,
+    backgroundColor: '#EFEAE2',
   },
   keyboardView: {
     flex: 1,
   },
   headerTitleContainer: {
+    flexDirection: 'row',
     alignItems: 'center',
-    maxWidth: 200,
+  },
+  headerTitleRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  headerTextCol: {
+    marginLeft: 8,
+    maxWidth: 160,
   },
   headerTitleText: {
-    fontSize: FONT_SIZES.md,
+    fontSize: 16,
     fontWeight: '700',
-    color: COLORS.textPrimary,
+    color: '#FFFFFF',
   },
   headerSubtitleText: {
     fontSize: 11,
-    color: '#008069',
-    fontWeight: '500',
+    color: '#DCF8C6',
     marginTop: 1,
   },
-  headerInfoBtn: {
-    padding: SPACING.xs,
-    marginRight: SPACING.xs,
+  headerRightRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 14,
+    marginRight: 4,
   },
-  headerInfoIcon: {
+  headerActionBtn: {
+    padding: 4,
+  },
+  headerActionIcon: {
     fontSize: 18,
+    color: '#FFFFFF',
+  },
+  dateSeparatorContainer: {
+    alignItems: 'center',
+    marginVertical: 12,
+  },
+  dateSeparatorPill: {
+    backgroundColor: '#FFFFFF',
+    paddingHorizontal: 12,
+    paddingVertical: 4,
+    borderRadius: 8,
+    elevation: 1,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.08,
+    shadowRadius: 2,
+  },
+  dateSeparatorText: {
+    fontSize: 11,
+    fontWeight: '700',
+    color: '#54656F',
+    letterSpacing: 0.5,
   },
   errorBanner: {
     backgroundColor: COLORS.dangerLight,

@@ -55,26 +55,36 @@ export const MessageInput = ({
 
       {/* Input Row */}
       <View style={styles.inputRow}>
-        <TouchableOpacity
-          style={styles.attachButton}
-          onPress={onOpenAttachmentMenu}
-          activeOpacity={0.7}
-        >
-          <Text style={styles.attachIcon}>📎</Text>
-        </TouchableOpacity>
+        <View style={styles.pillContainer}>
+          <TouchableOpacity
+            style={styles.pillIconBtn}
+            onPress={() => setText((prev) => (prev ? prev + ' 😊' : '😊 '))}
+            activeOpacity={0.7}
+          >
+            <Text style={styles.pillIcon}>😊</Text>
+          </TouchableOpacity>
 
-        <TextInput
-          style={styles.textInput}
-          placeholder="Type a message..."
-          placeholderTextColor={COLORS.textMuted}
-          value={text}
-          onChangeText={setText}
-          multiline
-          maxLength={2000}
-        />
+          <TextInput
+            style={styles.textInput}
+            placeholder="Message"
+            placeholderTextColor="#8696A0"
+            value={text}
+            onChangeText={setText}
+            multiline
+            maxLength={2000}
+          />
+
+          <TouchableOpacity
+            style={styles.pillIconBtn}
+            onPress={onOpenAttachmentMenu}
+            activeOpacity={0.7}
+          >
+            <Text style={styles.pillIcon}>📎</Text>
+          </TouchableOpacity>
+        </View>
 
         <TouchableOpacity
-          style={[styles.sendButton, canSend ? styles.sendActive : styles.sendDisabled]}
+          style={[styles.sendButton, canSend ? styles.sendActive : styles.sendInactive]}
           onPress={handleSend}
           disabled={!canSend}
           activeOpacity={0.8}
@@ -82,7 +92,7 @@ export const MessageInput = ({
           {isSending ? (
             <ActivityIndicator size="small" color="#FFFFFF" />
           ) : (
-            <Text style={styles.sendIcon}>➤</Text>
+            <Text style={styles.sendIcon}>{canSend ? '➤' : '🎙️'}</Text>
           )}
         </TouchableOpacity>
       </View>
@@ -145,64 +155,63 @@ const styles = StyleSheet.create({
   inputRow: {
     flexDirection: 'row',
     alignItems: 'flex-end',
+    paddingHorizontal: 6,
+    paddingBottom: 4,
   },
-  attachButton: {
-    width: 42,
-    height: 42,
-    borderRadius: 21,
-    backgroundColor: '#FFFFFF',
+  pillContainer: {
+    flex: 1,
+    flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'center',
+    backgroundColor: '#FFFFFF',
+    borderRadius: 24,
+    paddingHorizontal: 8,
+    minHeight: 46,
+    maxHeight: 120,
     marginRight: 6,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.1,
-    shadowRadius: 1,
-    elevation: 1,
+    shadowRadius: 2,
+    elevation: 2,
   },
-  attachIcon: {
-    fontSize: 18,
+  pillIconBtn: {
+    padding: 6,
+  },
+  pillIcon: {
+    fontSize: 20,
+    opacity: 0.7,
   },
   textInput: {
     flex: 1,
-    backgroundColor: '#FFFFFF',
-    borderRadius: 24,
-    paddingHorizontal: 16,
-    paddingTop: 10,
-    paddingBottom: 10,
     fontSize: 15,
     color: '#111B21',
-    maxHeight: 120,
-    minHeight: 42,
-    marginRight: 6,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.1,
-    shadowRadius: 1,
-    elevation: 1,
+    paddingVertical: 8,
+    paddingHorizontal: 6,
   },
   sendButton: {
-    width: 44,
-    height: 44,
-    borderRadius: 22,
+    width: 46,
+    height: 46,
+    borderRadius: 23,
+    backgroundColor: '#00A884',
     alignItems: 'center',
     justifyContent: 'center',
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.15,
-    shadowRadius: 2,
-    elevation: 2,
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 3,
+    elevation: 3,
   },
   sendActive: {
     backgroundColor: '#00A884',
   },
-  sendDisabled: {
-    backgroundColor: '#8696A0',
+  sendInactive: {
+    backgroundColor: '#00A884',
+    opacity: 0.85,
   },
   sendIcon: {
     color: '#FFFFFF',
     fontSize: 18,
-    fontWeight: 'bold',
+    fontWeight: '700',
     marginLeft: 2,
   },
 });

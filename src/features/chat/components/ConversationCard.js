@@ -3,76 +3,67 @@ import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { ParticipantAvatar } from './ParticipantAvatar.js';
 import { COLORS, SPACING, RADIUS, FONT_SIZES } from '../constants/theme.js';
 import { formatDateOrTime } from '../utils/dateHelpers.js';
+import { useAuth } from '../context/AuthContext.js';
 
 export const ConversationCard = ({
   conversation,
   onPress,
 }) => {
+  const { currentUserId } = useAuth();
   const isGroup = conversation.type === 'GROUP';
   const participantCount = conversation.participants_ids?.length || 0;
   const timeFormatted = formatDateOrTime(conversation.lastMessageAt || conversation.createdAt);
+
+  // In a 1-on-1 DM, dynamically show the other user's name
+  let displayName = conversation.name;
+  if (!isGroup && conversation.participants_ids) {
+    const peerId = conversation.participants_ids.find((id) => String(id) !== String(currentUserId));
+    if (peerId === 'first') displayName = 'Yuvansh';
+    else if (peerId === 'second') displayName = 'Student 1';
+  }
 
   return (
     <TouchableOpacity
       style={styles.container}
       onPress={onPress}
-      activeOpacity={0.7}
+      activeOpacity={0.65}
     >
       <ParticipantAvatar
-        name={conversation.name}
+        name={displayName}
         id={conversation.id}
-        size={52}
+        size={50}
       />
 
       <View style={styles.content}>
         <View style={styles.headerRow}>
           <Text style={styles.name} numberOfLines={1}>
-            {conversation.name}
+            {displayName}
           </Text>
           {timeFormatted ? (
             <Text style={styles.time}>{timeFormatted}</Text>
           ) : null}
         </View>
 
-        <View style={styles.detailsRow}>
-          <View
-            style={[
-              styles.typeBadge,
-              isGroup ? styles.groupBadge : styles.dmBadge,
-            ]}
-          >
-            <Text
-              style={[
-                styles.typeBadgeText,
-                isGroup ? styles.groupBadgeText : styles.dmBadgeText,
-              ]}
-            >
-              {isGroup ? 'GROUP' : 'DM'}
-            </Text>
+        <View style={styles.bottomRow}>
+          <View style={styles.messageRow}>
+            <Text style={styles.checkIcon}>✓✓</Text>
+            {conversation.lastMessage ? (
+              <Text style={styles.lastMessage} numberOfLines={1}>
+                {conversation.lastMessage}
+              </Text>
+            ) : (
+              <Text style={styles.emptyMessage} numberOfLines={1}>
+                Tap to chat
+              </Text>
+            )}
           </View>
 
-          {conversation.createdByName ? (
-            <Text style={styles.createdBy} numberOfLines={1}>
-              By {conversation.createdByName}
-            </Text>
-          ) : null}
-
-          {participantCount > 0 ? (
-            <Text style={styles.participantsCount}>
-              • {participantCount} {participantCount === 1 ? 'member' : 'members'}
-            </Text>
-          ) : null}
+          {isGroup && (
+            <View style={styles.groupBadge}>
+              <Text style={styles.groupBadgeText}>GROUP</Text>
+            </View>
+          )}
         </View>
-
-        {conversation.lastMessage ? (
-          <Text style={styles.lastMessage} numberOfLines={1}>
-            {conversation.lastMessage}
-          </Text>
-        ) : (
-          <Text style={styles.emptyMessage} numberOfLines={1}>
-            Tap to open conversation
-          </Text>
-        )}
       </View>
     </TouchableOpacity>
   );
@@ -82,15 +73,15 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingVertical: SPACING.md,
-    paddingHorizontal: SPACING.lg,
-    backgroundColor: COLORS.surface,
-    borderBottomWidth: 1,
-    borderBottomColor: COLORS.border,
+    paddingVertical: 12,
+    paddingHorizontal: 16,
+    backgroundColor: '#FFFFFF',
+    borderBottomWidth: StyleSheet.hairlineWidth,
+    borderBottomColor: '#E9EDEF',
   },
   content: {
     flex: 1,
-    marginLeft: SPACING.md,
+    marginLeft: 14,
     justifyContent: 'center',
   },
   headerRow: {
@@ -100,59 +91,53 @@ const styles = StyleSheet.create({
     marginBottom: 4,
   },
   name: {
-    fontSize: FONT_SIZES.md,
-    fontWeight: '700',
-    color: COLORS.textPrimary,
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#111B21',
     flex: 1,
-    marginRight: SPACING.sm,
+    marginRight: 8,
   },
   time: {
-    fontSize: FONT_SIZES.xs,
-    color: COLORS.textMuted,
+    fontSize: 12,
+    color: '#667781',
+    fontWeight: '400',
   },
-  detailsRow: {
+  bottomRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 4,
-    gap: SPACING.xs,
+    justifyContent: 'space-between',
   },
-  typeBadge: {
-    paddingHorizontal: 6,
-    paddingVertical: 2,
-    borderRadius: RADIUS.xs,
+  messageRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    flex: 1,
+    marginRight: 8,
   },
-  typeBadgeText: {
-    fontSize: 10,
+  checkIcon: {
+    fontSize: 12,
+    color: '#53BDEB',
     fontWeight: '700',
-  },
-  dmBadge: {
-    backgroundColor: '#EFF6FF',
-  },
-  dmBadgeText: {
-    color: COLORS.dmBadge,
-  },
-  groupBadge: {
-    backgroundColor: '#F5F3FF',
-  },
-  groupBadgeText: {
-    color: COLORS.groupBadge,
-  },
-  createdBy: {
-    fontSize: FONT_SIZES.xs,
-    color: COLORS.textSecondary,
-    maxWidth: 120,
-  },
-  participantsCount: {
-    fontSize: FONT_SIZES.xs,
-    color: COLORS.textMuted,
+    marginRight: 4,
   },
   lastMessage: {
-    fontSize: FONT_SIZES.sm,
-    color: COLORS.textSecondary,
+    fontSize: 14,
+    color: '#667781',
+    flex: 1,
   },
   emptyMessage: {
-    fontSize: FONT_SIZES.sm,
-    color: COLORS.textMuted,
+    fontSize: 14,
+    color: '#8696A0',
     fontStyle: 'italic',
+  },
+  groupBadge: {
+    paddingHorizontal: 6,
+    paddingVertical: 2,
+    borderRadius: 4,
+    backgroundColor: '#E7F7F3',
+  },
+  groupBadgeText: {
+    fontSize: 10,
+    fontWeight: '700',
+    color: '#008069',
   },
 });

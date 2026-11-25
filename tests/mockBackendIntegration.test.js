@@ -7,7 +7,7 @@ import { userApi } from '../src/features/chat/services/userApi.js';
 import { chatApi } from '../src/features/chat/services/chatApi.js';
 
 let usersDb = [
-  { id: 'first', name: 'Vaibhav', bio: 'Instructor at NST' },
+  { id: 'first', name: 'Yuvansh', bio: 'Instructor at NST' },
   { id: 'second', name: 'Student 1', bio: 'React Native Learner' },
   { id: 'third', name: 'Student 2', bio: 'Mobile Developer' },
 ];
@@ -136,7 +136,7 @@ test.after(async () => {
 test('FLOW 1 - USERS: Fetches users and retrieves specific profile', async () => {
   const users = await userApi.getUsers();
   assert.strictEqual(users.length, 3);
-  assert.strictEqual(users[0].name, 'Vaibhav');
+  assert.strictEqual(users[0].name, 'Yuvansh');
 
   const profile = await userApi.getUserProfile('second');
   assert.strictEqual(profile.name, 'Student 1');

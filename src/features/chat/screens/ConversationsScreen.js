@@ -25,25 +25,46 @@ export const ConversationsScreen = () => {
   const { isServerOnline, currentUserId, updateConfig } = useAuth();
 
   const [searchQuery, setSearchQuery] = useState('');
+  const [filterType, setFilterType] = useState('ALL');
   const [settingsVisible, setSettingsVisible] = useState(false);
 
   const filteredConversations = useMemo(() => {
-    if (!searchQuery.trim()) return conversations;
+    let list = conversations;
+    if (filterType === 'GROUPS') {
+      list = list.filter((c) => c.type === 'GROUP');
+    }
+    if (!searchQuery.trim()) return list;
     const q = searchQuery.toLowerCase().trim();
-    return conversations.filter(
+    return list.filter(
       (c) =>
         c.name.toLowerCase().includes(q) ||
         (c.createdByName && c.createdByName.toLowerCase().includes(q))
     );
-  }, [conversations, searchQuery]);
+  }, [conversations, searchQuery, filterType]);
 
   return (
     <SafeAreaView style={styles.safeArea}>
-      {/* Top Header */}
-      <View style={styles.header}>
+      {/* WhatsApp Brand Header */}
+      <View style={styles.whatsappHeader}>
         <View style={styles.titleRow}>
-          <Text style={styles.title}>Conversations</Text>
+          <Text style={styles.title}>WhatsApp</Text>
           <View style={styles.headerActions}>
+            <TouchableOpacity
+              style={styles.headerIconBtn}
+              onPress={() => navigation.navigate('CameraScreen')}
+              hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
+            >
+              <Text style={styles.headerIcon}>📷</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={styles.headerIconBtn}
+              onPress={() => setSettingsVisible(true)}
+              hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
+            >
+              <Text style={styles.headerIcon}>⚙️</Text>
+            </TouchableOpacity>
+
             <View
               style={[
                 styles.statusPill,
@@ -60,49 +81,23 @@ export const ConversationsScreen = () => {
                   {
                     backgroundColor:
                       isServerOnline === true
-                        ? COLORS.activeOnline
+                        ? '#25D366'
                         : isServerOnline === false
-                        ? COLORS.danger
-                        : COLORS.warning,
+                        ? '#EF4444'
+                        : '#F59E0B',
                   },
                 ]}
               />
               <Text style={styles.statusText}>
-                {isServerOnline === true ? 'Online' : isServerOnline === false ? 'Offline' : 'API'}
+                {isServerOnline === true ? 'Live' : isServerOnline === false ? 'Offline' : 'API'}
               </Text>
             </View>
-
-            <TouchableOpacity
-              style={styles.settingsBtn}
-              onPress={() => setSettingsVisible(true)}
-              hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
-            >
-              <Text style={styles.settingsIcon}>⚙️</Text>
-            </TouchableOpacity>
           </View>
-        </View>
-
-        {/* Search Bar */}
-        <View style={styles.searchBar}>
-          <Text style={styles.searchIcon}>🔍</Text>
-          <TextInput
-            style={styles.searchInput}
-            placeholder="Search conversations..."
-            placeholderTextColor={COLORS.textMuted}
-            value={searchQuery}
-            onChangeText={setSearchQuery}
-            clearButtonMode="while-editing"
-          />
-          {searchQuery.length > 0 && (
-            <TouchableOpacity onPress={() => setSearchQuery('')}>
-              <Text style={styles.clearSearch}>✕</Text>
-            </TouchableOpacity>
-          )}
         </View>
 
         {/* Quick Identity Switcher */}
         <View style={styles.identityBar}>
-          <Text style={styles.identityLabel}>Chatting as:</Text>
+          <Text style={styles.identityLabel}>PROFILE:</Text>
           <ScrollView
             horizontal
             showsHorizontalScrollIndicator={false}
@@ -138,6 +133,53 @@ export const ConversationsScreen = () => {
               );
             })}
           </ScrollView>
+        </View>
+      </View>
+
+      {/* Search Bar & Modern Filter Chips */}
+      <View style={styles.subHeader}>
+        <View style={styles.searchBar}>
+          <Text style={styles.searchIcon}>🔍</Text>
+          <TextInput
+            style={styles.searchInput}
+            placeholder="Search chats..."
+            placeholderTextColor="#8696A0"
+            value={searchQuery}
+            onChangeText={setSearchQuery}
+            clearButtonMode="while-editing"
+          />
+          {searchQuery.length > 0 && (
+            <TouchableOpacity onPress={() => setSearchQuery('')}>
+              <Text style={styles.clearSearch}>✕</Text>
+            </TouchableOpacity>
+          )}
+        </View>
+
+        <View style={styles.filterRow}>
+          <TouchableOpacity
+            style={[styles.filterChip, filterType === 'ALL' && styles.filterChipActive]}
+            onPress={() => setFilterType('ALL')}
+          >
+            <Text style={[styles.filterChipText, filterType === 'ALL' && styles.filterChipTextActive]}>
+              All
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={[styles.filterChip, filterType === 'UNREAD' && styles.filterChipActive]}
+            onPress={() => setFilterType('UNREAD')}
+          >
+            <Text style={[styles.filterChipText, filterType === 'UNREAD' && styles.filterChipTextActive]}>
+              Unread
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={[styles.filterChip, filterType === 'GROUPS' && styles.filterChipActive]}
+            onPress={() => setFilterType('GROUPS')}
+          >
+            <Text style={[styles.filterChipText, filterType === 'GROUPS' && styles.filterChipTextActive]}>
+              Groups
+            </Text>
+          </TouchableOpacity>
         </View>
       </View>
 
@@ -239,49 +281,49 @@ export const ConversationsScreen = () => {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: COLORS.background,
+    backgroundColor: '#008069',
   },
-  header: {
-    backgroundColor: COLORS.surface,
-    paddingHorizontal: SPACING.lg,
-    paddingTop: SPACING.md,
-    paddingBottom: SPACING.sm,
-    borderBottomWidth: 1,
-    borderBottomColor: COLORS.border,
+  whatsappHeader: {
+    backgroundColor: '#008069',
+    paddingHorizontal: 16,
+    paddingTop: 8,
+    paddingBottom: 12,
   },
   titleRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: SPACING.sm,
   },
   title: {
-    fontSize: FONT_SIZES.xxl,
-    fontWeight: '800',
-    color: COLORS.textPrimary,
+    fontSize: 22,
+    fontWeight: '700',
+    color: '#FFFFFF',
+    letterSpacing: 0.3,
   },
   headerActions: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: SPACING.sm,
+    gap: 14,
+  },
+  headerIconBtn: {
+    padding: 4,
+  },
+  headerIcon: {
+    fontSize: 18,
+    color: '#FFFFFF',
   },
   statusPill: {
     flexDirection: 'row',
     alignItems: 'center',
     paddingHorizontal: 8,
     paddingVertical: 4,
-    borderRadius: RADIUS.full,
+    borderRadius: 12,
+    backgroundColor: 'rgba(255, 255, 255, 0.2)',
     gap: 4,
   },
-  statusOnline: {
-    backgroundColor: COLORS.successLight,
-  },
-  statusOffline: {
-    backgroundColor: COLORS.dangerLight,
-  },
-  statusChecking: {
-    backgroundColor: COLORS.warningLight,
-  },
+  statusOnline: {},
+  statusOffline: {},
+  statusChecking: {},
   statusDot: {
     width: 7,
     height: 7,
@@ -290,49 +332,19 @@ const styles = StyleSheet.create({
   statusText: {
     fontSize: 10,
     fontWeight: '700',
-    color: COLORS.textSecondary,
-  },
-  settingsBtn: {
-    padding: 6,
-    backgroundColor: COLORS.surfaceAlt,
-    borderRadius: RADIUS.full,
-  },
-  settingsIcon: {
-    fontSize: 16,
-  },
-  searchBar: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: COLORS.surfaceAlt,
-    borderRadius: RADIUS.md,
-    paddingHorizontal: SPACING.md,
-    height: 38,
-  },
-  searchIcon: {
-    fontSize: 14,
-    marginRight: SPACING.xs,
-  },
-  searchInput: {
-    flex: 1,
-    fontSize: FONT_SIZES.sm,
-    color: COLORS.textPrimary,
-  },
-  clearSearch: {
-    fontSize: 14,
-    color: COLORS.textMuted,
-    paddingHorizontal: 4,
+    color: '#FFFFFF',
   },
   identityBar: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginTop: SPACING.sm,
-    paddingTop: 2,
+    marginTop: 10,
   },
   identityLabel: {
-    fontSize: 11,
-    fontWeight: '700',
-    color: COLORS.textMuted,
-    marginRight: 6,
+    fontSize: 10,
+    fontWeight: '800',
+    color: '#DCF8C6',
+    marginRight: 8,
+    letterSpacing: 0.6,
   },
   identityScroll: {
     flexDirection: 'row',
@@ -340,23 +352,74 @@ const styles = StyleSheet.create({
     gap: 6,
   },
   identityChip: {
-    paddingHorizontal: 10,
+    paddingHorizontal: 12,
     paddingVertical: 5,
-    borderRadius: RADIUS.full,
-    backgroundColor: COLORS.surfaceAlt,
-    borderWidth: 1,
-    borderColor: 'transparent',
+    borderRadius: 16,
+    backgroundColor: 'rgba(255, 255, 255, 0.18)',
   },
   identityChipActive: {
-    backgroundColor: '#E8F5E9',
-    borderColor: '#00A884',
+    backgroundColor: '#FFFFFF',
   },
   identityChipText: {
-    fontSize: 11,
-    color: COLORS.textSecondary,
+    fontSize: 12,
+    color: '#FFFFFF',
     fontWeight: '600',
   },
   identityChipTextActive: {
+    color: '#008069',
+    fontWeight: '700',
+  },
+  subHeader: {
+    backgroundColor: '#FFFFFF',
+    paddingHorizontal: 16,
+    paddingTop: 10,
+    paddingBottom: 8,
+    borderBottomWidth: 1,
+    borderBottomColor: '#E9EDEF',
+  },
+  searchBar: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#F0F2F5',
+    borderRadius: 20,
+    paddingHorizontal: 12,
+    height: 38,
+  },
+  searchIcon: {
+    fontSize: 14,
+    marginRight: 8,
+    opacity: 0.6,
+  },
+  searchInput: {
+    flex: 1,
+    fontSize: 14,
+    color: '#111B21',
+  },
+  clearSearch: {
+    fontSize: 14,
+    color: '#8696A0',
+    paddingHorizontal: 4,
+  },
+  filterRow: {
+    flexDirection: 'row',
+    gap: 8,
+    marginTop: 8,
+  },
+  filterChip: {
+    paddingHorizontal: 14,
+    paddingVertical: 4,
+    borderRadius: 16,
+    backgroundColor: '#F0F2F5',
+  },
+  filterChipActive: {
+    backgroundColor: '#E7F7F3',
+  },
+  filterChipText: {
+    fontSize: 12,
+    color: '#54656F',
+    fontWeight: '600',
+  },
+  filterChipTextActive: {
     color: '#008069',
     fontWeight: '700',
   },
@@ -407,6 +470,7 @@ const styles = StyleSheet.create({
   },
   centerContainer: {
     flex: 1,
+    backgroundColor: '#FFFFFF',
     justifyContent: 'center',
     alignItems: 'center',
     padding: SPACING.xl,
@@ -433,10 +497,10 @@ const styles = StyleSheet.create({
     marginBottom: SPACING.xl,
   },
   createBtn: {
-    backgroundColor: COLORS.primary,
+    backgroundColor: '#008069',
     paddingHorizontal: SPACING.xl,
     paddingVertical: SPACING.md,
-    borderRadius: RADIUS.md,
+    borderRadius: RADIUS.full,
   },
   createBtnText: {
     color: '#FFFFFF',
@@ -444,27 +508,28 @@ const styles = StyleSheet.create({
     fontWeight: '700',
   },
   listContent: {
-    paddingBottom: 80,
+    backgroundColor: '#FFFFFF',
+    paddingBottom: 90,
   },
   fab: {
     position: 'absolute',
-    right: SPACING.xl,
-    bottom: SPACING.xl,
+    right: 20,
+    bottom: 24,
     width: 56,
     height: 56,
     borderRadius: 28,
-    backgroundColor: COLORS.primary,
+    backgroundColor: '#00A884',
     justifyContent: 'center',
     alignItems: 'center',
     elevation: 6,
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 3 },
-    shadowOpacity: 0.3,
-    shadowRadius: 4,
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.28,
+    shadowRadius: 6,
   },
   fabIcon: {
     color: '#FFFFFF',
-    fontSize: 28,
+    fontSize: 26,
     fontWeight: 'bold',
     marginTop: -2,
   },

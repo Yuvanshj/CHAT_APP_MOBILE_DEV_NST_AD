@@ -12,13 +12,13 @@ export const ChatStackNavigator = () => {
       initialRouteName="ConversationList"
       screenOptions={{
         headerBackButtonDisplayMode: 'generic',
-        headerTintColor: COLORS.primary,
+        headerTintColor: '#FFFFFF',
         headerStyle: {
-          backgroundColor: COLORS.surface,
+          backgroundColor: COLORS.primary,
         },
         headerTitleStyle: {
           fontWeight: '700',
-          color: COLORS.textPrimary,
+          color: '#FFFFFF',
         },
       }}
     >

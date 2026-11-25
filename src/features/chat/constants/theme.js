@@ -35,11 +35,36 @@ export const COLORS = {
   whatsappTime: '#667781',
   whatsappHeader: '#008069',
   whatsappFloatingBtn: '#00A884',
+  whatsappAccent: '#25D366',
 
   // Badges
   dmBadge: '#25D366',
   groupBadge: '#008069',
   activeOnline: '#25D366',
+};
+
+export const SHADOWS = {
+  sm: {
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.08,
+    shadowRadius: 2,
+    elevation: 2,
+  },
+  md: {
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.16,
+    shadowRadius: 6,
+    elevation: 4,
+  },
+  fab: {
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.25,
+    shadowRadius: 8,
+    elevation: 6,
+  },
 };
 
 export const SPACING = {

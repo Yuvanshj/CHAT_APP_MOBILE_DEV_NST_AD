@@ -23,14 +23,14 @@ const PORT = process.env.PORT || 3000;
 
 // Seed Data
 let users = [
-  { id: 'first', name: 'Vaibhav', bio: 'Instructor @ NST AD' },
+  { id: 'first', name: 'Yuvansh', bio: 'Mobile App Developer' },
   { id: 'second', name: 'Student 1', bio: 'React Native & Mobile Dev' },
 ];
 
 let conversations = [
   {
     id: 'convo-1',
-    name: 'Vaibhav & Student 1',
+    name: 'Yuvansh & Student 1',
     type: 'DM',
     participants_ids: ['first', 'second'],
     createdBy: 'first',
@@ -45,7 +45,7 @@ let messages = [
     id: 'msg-1',
     conversation_id: 'convo-1',
     sender_id: 'first',
-    sender_name: 'Vaibhav',
+    sender_name: 'Yuvansh',
     content: 'Welcome to the live chat session!',
     createdAt: new Date(Date.now() - 3600000 * 2).toISOString(),
   },
