@@ -1,38 +1,45 @@
 export const COLORS = {
-  primary: '#4F46E5', // Indigo 600
-  primaryLight: '#EEF2FF', // Indigo 50
-  primaryDark: '#3730A3', // Indigo 800
-  secondary: '#06B6D4', // Cyan 500
-  success: '#10B981', // Emerald 500
-  successLight: '#ECFDF5',
-  warning: '#F59E0B', // Amber 500
+  primary: '#008069', // WhatsApp Teal Green
+  primaryLight: '#E7F7F3',
+  primaryDark: '#075E54', // WhatsApp Deep Forest Green
+  secondary: '#00A884', // WhatsApp Vibrant Green
+  success: '#25D366', // WhatsApp Brand Green
+  successLight: '#DCF8C6', // WhatsApp Light Bubble Green
+  warning: '#F59E0B',
   warningLight: '#FFFBEB',
-  danger: '#EF4444', // Red 500
+  danger: '#EF4444',
   dangerLight: '#FEF2F2',
 
-  // Neutrals (Slate)
-  background: '#F8FAFC',
+  // Neutrals & WhatsApp Chat Wallpaper
+  background: '#EFEAE2', // WhatsApp Classic Chat Wallpaper Background
   surface: '#FFFFFF',
-  surfaceAlt: '#F1F5F9',
-  border: '#E2E8F0',
-  borderDark: '#CBD5E1',
+  surfaceAlt: '#F0F2F5',
+  border: '#E9EDEF',
+  borderDark: '#D1D7DB',
 
-  textPrimary: '#0F172A',
-  textSecondary: '#64748B',
-  textMuted: '#94A3B8',
+  textPrimary: '#111B21', // WhatsApp Deep Charcoal Text
+  textSecondary: '#667781', // WhatsApp Secondary Grey
+  textMuted: '#8696A0', // WhatsApp Muted Text
   textInverse: '#FFFFFF',
 
-  // Message Bubbles
-  bubbleOwn: '#4F46E5',
-  bubbleOwnText: '#FFFFFF',
-  bubbleOther: '#FFFFFF',
-  bubbleOtherText: '#0F172A',
-  bubbleOtherBorder: '#E2E8F0',
+  // WhatsApp Message Bubbles
+  bubbleOwn: '#D9FDD3', // WhatsApp Outgoing Light Green Bubble
+  bubbleOwnText: '#111B21',
+  bubbleOther: '#FFFFFF', // WhatsApp Incoming White Bubble
+  bubbleOtherText: '#111B21',
+  bubbleOtherBorder: 'rgba(0, 0, 0, 0.05)',
+
+  // WhatsApp Specific Details
+  whatsappBlueTick: '#53BDEB', // WhatsApp Blue Double Checkmark
+  whatsappGreyTick: '#8696A0',
+  whatsappTime: '#667781',
+  whatsappHeader: '#008069',
+  whatsappFloatingBtn: '#00A884',
 
   // Badges
-  dmBadge: '#3B82F6',
-  groupBadge: '#8B5CF6',
-  activeOnline: '#22C55E',
+  dmBadge: '#25D366',
+  groupBadge: '#008069',
+  activeOnline: '#25D366',
 };
 
 export const SPACING = {

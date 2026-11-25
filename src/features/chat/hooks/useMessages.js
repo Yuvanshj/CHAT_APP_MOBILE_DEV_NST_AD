@@ -191,6 +191,8 @@ export function useMessages({
         const serverMsg = await chatApi.sendMessage({
           conversation_id: conversationId,
           content: trimmed,
+          sender_id: currentUserId,
+          sender_name: currentUserName || 'You',
         });
 
         if (isMountedRef.current) {
@@ -252,6 +254,8 @@ export function useMessages({
         const serverMsg = await chatApi.sendMessage({
           conversation_id: conversationId,
           imageInfo,
+          sender_id: currentUserId,
+          sender_name: currentUserName || 'You',
         });
 
         if (isMountedRef.current) {

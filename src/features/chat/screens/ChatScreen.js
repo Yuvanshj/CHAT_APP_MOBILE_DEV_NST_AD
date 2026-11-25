@@ -69,8 +69,8 @@ export const ChatScreen = () => {
           </Text>
           <Text style={styles.headerSubtitleText} numberOfLines={1}>
             {conversationData.type === 'GROUP'
-              ? `${conversationData.participants?.length || 0} participants • Tap for info`
-              : 'Direct Message'}
+              ? `${conversationData.participants?.length || 0} participants`
+              : 'online'}
           </Text>
         </TouchableOpacity>
       ),
@@ -349,8 +349,9 @@ const styles = StyleSheet.create({
     color: COLORS.textPrimary,
   },
   headerSubtitleText: {
-    fontSize: 10,
-    color: COLORS.textSecondary,
+    fontSize: 11,
+    color: '#008069',
+    fontWeight: '500',
     marginTop: 1,
   },
   headerInfoBtn: {

@@ -184,11 +184,34 @@ const server = http.createServer((req, res) => {
         return res.end(JSON.stringify({ message: 'conversation_id and content or imageInfo are required' }));
       }
 
+      let senderId = json.sender_id;
+      let senderName = json.sender_name;
+
+      if (!senderId) {
+        const auth = req.headers['authorization'];
+        if (auth && auth.startsWith('Basic ')) {
+          try {
+            const decoded = Buffer.from(auth.slice(6), 'base64').toString('utf-8');
+            const [u] = decoded.split(':');
+            if (u) senderId = u;
+          } catch {}
+        }
+      }
+
+      if (!senderId) {
+        senderId = 'first';
+      }
+
+      if (!senderName) {
+        const foundUser = users.find((u) => String(u.id) === String(senderId));
+        senderName = foundUser ? foundUser.name : `User ${senderId}`;
+      }
+
       const newMsg = {
         id: `msg-${Date.now()}`,
         conversation_id: json.conversation_id,
-        sender_id: 'first',
-        sender_name: 'Vaibhav',
+        sender_id: senderId,
+        sender_name: senderName,
         content: json.content || '',
         imageInfo: json.imageInfo || null,
         createdAt: new Date().toISOString(),
