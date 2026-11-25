@@ -56,15 +56,20 @@ export function useUsers() {
   }, [fetchUsers]);
 
   const filteredUsers = useMemo(() => {
-    if (!searchQuery.trim()) return users;
+    let list = users;
+    // In Direct Message mode, exclude the currently logged in user
+    if (conversationType === 'DM') {
+      list = list.filter((u) => String(u.id) !== String(currentUserId));
+    }
+    if (!searchQuery.trim()) return list;
     const query = searchQuery.toLowerCase().trim();
-    return users.filter(
+    return list.filter(
       (u) =>
         u.name.toLowerCase().includes(query) ||
         (u.bio && u.bio.toLowerCase().includes(query)) ||
         (u.email && u.email.toLowerCase().includes(query))
     );
-  }, [users, searchQuery]);
+  }, [users, searchQuery, conversationType, currentUserId]);
 
   const selectedUsers = useMemo(() => {
     return users.filter((u) => selectedUserIds.includes(u.id));

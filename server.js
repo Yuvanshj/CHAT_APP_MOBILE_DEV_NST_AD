@@ -25,31 +25,18 @@ const PORT = process.env.PORT || 3000;
 let users = [
   { id: 'first', name: 'Vaibhav', bio: 'Instructor @ NST AD' },
   { id: 'second', name: 'Student 1', bio: 'React Native & Mobile Dev' },
-  { id: 'third', name: 'Student 2', bio: 'Full-stack & Mobile Developer' },
-  { id: 'fourth', name: 'Aarav Sharma', bio: 'Building cool mobile apps' },
-  { id: 'fifth', name: 'Ananya Verma', bio: 'UI/UX enthusiast' },
 ];
 
 let conversations = [
   {
     id: 'convo-1',
-    name: 'NST Mobile Dev Class',
-    type: 'GROUP',
-    participants_ids: ['first', 'second', 'third', 'fourth'],
-    createdBy: 'first',
-    createdAt: new Date(Date.now() - 3600000 * 4).toISOString(),
-    lastMessage: 'Welcome to the live chat session!',
-    lastMessageAt: new Date(Date.now() - 3600000 * 2).toISOString(),
-  },
-  {
-    id: 'convo-2',
-    name: 'Vaibhav',
+    name: 'Vaibhav & Student 1',
     type: 'DM',
     participants_ids: ['first', 'second'],
     createdBy: 'first',
     createdAt: new Date(Date.now() - 3600000 * 24).toISOString(),
-    lastMessage: 'Check out the new camera and image picker feature',
-    lastMessageAt: new Date(Date.now() - 3600000 * 5).toISOString(),
+    lastMessage: 'Awesome! Text messages, image sharing, and cameras are all working.',
+    lastMessageAt: new Date(Date.now() - 3600000 * 1).toISOString(),
   },
 ];
 
@@ -69,14 +56,6 @@ let messages = [
     sender_name: 'Student 1',
     content: 'Awesome! Text messages, image sharing, and cameras are all working.',
     createdAt: new Date(Date.now() - 3600000 * 1).toISOString(),
-  },
-  {
-    id: 'msg-3',
-    conversation_id: 'convo-2',
-    sender_id: 'first',
-    sender_name: 'Vaibhav',
-    content: 'Check out the new camera and image picker feature',
-    createdAt: new Date(Date.now() - 3600000 * 5).toISOString(),
   },
 ];
 

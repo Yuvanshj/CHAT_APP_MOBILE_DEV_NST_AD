@@ -65,7 +65,6 @@ const defaultIdentity = resolveDefaultIdentity();
 export const PRESET_PROFILES = [
   { id: 'first', name: 'Vaibhav', label: '👨‍🏫 Vaibhav (Mac)', auth: 'Basic first:second' },
   { id: 'second', name: 'Student 1', label: '📱 Student 1 (iPhone)', auth: 'Basic second:second' },
-  { id: 'third', name: 'Student 2', label: '💻 Student 2', auth: 'Basic third:third' },
 ];
 
 export const CHAT_CONSTANTS = {
